@@ -1,8 +1,8 @@
 /* const socket = io();
 socket.emit('home', {name: "Joshua"}) */
 
-const room1 = "joshua";
-const message = "Welcome"
+/* const room1 = "joshua";
+const message = "Welcome" */
 
 const div = document.querySelector('div');
 const main = document.querySelector('main');
@@ -10,26 +10,32 @@ const main = document.querySelector('main');
 const socket = io();
 
 function createRoom() {
-    socket.emit('create-room', room1);
+    const input = document.querySelector('input');
+    if(input.value) socket.emit('create-room', input.value);
+    input.value = '';
 }
 
 function joinRoom() {
-    socket.emit('join-room', room1);
+    const input = document.querySelector('input');
+    if(input.value) socket.emit('join-room', input.value);
+    input.value = '';
 }
 
 function sendMessage() {
-    socket.emit('send-message', message);
+    const input = document.querySelector('input');
+    if(input.value) socket.emit('send-message', input.value);
+    input.value = '';
 }
 
 socket.on('created-room', room => {
-    const h1 = document.createElement('h1');
-    h1.innerHTML = `${room} room has been created`;
+    const h3 = document.createElement('h3');
+    h3.innerHTML = `"${room}" room has been created`;
 
-    div.append(h1)
+    div.append(h3)
 })
 
 socket.on('send-message', message => {
-    const msg = document.createElement('h2');
+    const msg = document.createElement('p');
     msg.innerHTML = message;
 
     main.append(msg);

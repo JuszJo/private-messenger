@@ -17,14 +17,18 @@ ws.on('connection', socket => {
     console.log("A user has connected to the server");
 
     socket.on('create-room', room => {
+        socket.leave(socket.id);
+        
         ws.emit('created-room', room);
         
         socket.join(room)
-
+        
         console.log(`${room} room has been created`);
     })
-
+    
     socket.on('join-room', room => {
+        socket.leave(socket.id);
+
         socket.join(room);
 
         console.log(`${socket.id} has joined ${room} room`);
@@ -35,6 +39,7 @@ ws.on('connection', socket => {
         // then emit the message to the particular room
         // NOTE in the scope of rooms the broadcast property is undefined so the io will be used to send to all sockets
         // while the socket will emit to all sockets excluding itself
+
         Array.from(socket.rooms)
         .filter(id => id != socket.id)
         .forEach(room => {
@@ -42,7 +47,4 @@ ws.on('connection', socket => {
             ws.in(room).emit('send-message', message)
         })
     })
-
-    
-
 });
