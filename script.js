@@ -1,29 +1,30 @@
-/* const socket = io();
-socket.emit('home', {name: "Joshua"}) */
-
-/* const room1 = "joshua";
-const message = "Welcome" */
+const user = prompt("What is your name");
 
 const div = document.querySelector('div');
 const main = document.querySelector('main');
 
-const socket = io();
+// io(PATH: url | namespace, OPTIONS: object)
+
+const socket = io('/', {auth: {name: user}});
+const group = io('/group');
 
 function createRoom() {
     const input = document.querySelector('input');
-    if(input.value) socket.emit('create-room', input.value);
+    if(input.value) group.emit('create-room', input.value);
+    // if(input.value) socket.emit('create-room', input.value);
     input.value = '';
 }
 
 function joinRoom() {
     const input = document.querySelector('input');
-    if(input.value) socket.emit('join-room', input.value);
+    if(input.value) group.emit('join-room', input.value);
+    // if(input.value) socket.emit('join-room', input.value);
     input.value = '';
 }
 
 function sendMessage() {
     const input = document.querySelector('input');
-    if(input.value) socket.emit('send-message', input.value);
+    if(input.value) group.emit('send-message', input.value);
     input.value = '';
 }
 

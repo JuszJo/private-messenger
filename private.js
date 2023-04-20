@@ -13,28 +13,50 @@ const ws = new io.Server(server);
 
 // in socket.io the room is the same as the socket id
 
-ws.on('connection', socket => {
-    console.log("A user has connected to the server");
+// ws.of('/').adapter.rooms stores total rooms in a server instance
 
+// socket.nsp shows all namespaces, then .name is to show current socket namespace
+
+function checkRoom() {
+    const rooms = ws.of('/').adapter.rooms;
+}
+
+ws.of('/group').adapter.on('create-room', room => {
+    console.log(room, "Was created");
+})
+
+ws.of('/group').on('connection', socket => {
     socket.on('create-room', room => {
         socket.leave(socket.id);
         
-        ws.emit('created-room', room);
-        
-        socket.join(room)
-        
-        console.log(`${room} room has been created`);
-    })
-    
-    socket.on('join-room', room => {
-        socket.leave(socket.id);
-
         socket.join(room);
 
+        console.log(`${socket.id} has joined ${room} room`);
+        
+        ws.emit('created-room', room);
+    })
+
+    socket.on('join-room', room => {
+        socket.leave(socket.id);
+    
+        socket.join(room);
+    
         console.log(`${socket.id} has joined ${room} room`);
     })
 
     socket.on('send-message', message => {
+        Array.from(socket.rooms)
+        .filter(id => id != socket.id)
+        .forEach(room => {
+            ws.in(room).emit('send-message', message);
+        })
+    })
+})
+
+ws.on('connection', socket => {
+    console.log(`${socket.handshake.auth.name} has connected to the server`);
+
+    /* socket.on('send-message', message => {
         // create an array from the rooms set and filter it for the recently created room
         // then emit the message to the particular room
         // NOTE in the scope of rooms the broadcast property is undefined so the io will be used to send to all sockets
@@ -46,5 +68,5 @@ ws.on('connection', socket => {
             // console.log(socket.id, room);
             ws.in(room).emit('send-message', message)
         })
-    })
+    }) */
 });
