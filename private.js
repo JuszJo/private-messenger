@@ -57,11 +57,11 @@ ws.of('/group').on('connection', socket => {
         }
     })
 
-    socket.on('send-message', message => {
+    socket.on('send-message', ({user, message}) => {
         Array.from(socket.rooms)
         .filter(id => id != socket.id)
         .forEach(room => {
-            ws.of('/group').in(room).emit('send-message', message);
+            ws.of('/group').in(room).emit('send-message', {user: user, message: message});
             // socket.emit('send-message', message)
             // socket.broadcast.emit('send-message', message)
             // ws.in(room).emit('send-message', message);

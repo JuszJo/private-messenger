@@ -25,7 +25,7 @@ function joinRoom() {
 
 function sendMessage() {
     const input = document.querySelector('input');
-    if(input.value) group.emit('send-message', input.value);
+    if(input.value) group.emit('send-message', {user: user, message: input.value});
     input.value = '';
 }
 
@@ -45,11 +45,10 @@ group.on('room-error', message => {
     document.querySelector('footer').append(error);
 })
 
-
-group.on('send-message', message => {
+group.on('send-message', ({user, message}) => {
     console.log('working');
     const msg = document.createElement('h3');
-    msg.innerHTML = message;
+    msg.innerHTML = `${user}: ${message}`;
 
     main.append(msg);
 })
