@@ -17,8 +17,16 @@ const ws = new io.Server(server);
 
 // socket.nsp shows all namespaces, then .name is to show current socket namespace
 
-function checkRoom() {
-    const rooms = ws.of('/').adapter.rooms;
+function checkRoom(room) {
+    const rooms = ws.of('/group').adapter.rooms;
+    let exist = false;
+
+    rooms.forEach((value, key, map) => {
+        console.log(key, room);
+        if(key == room) exist = true;
+    })
+
+    return exist;
 }
 
 ws.of('/group').adapter.on('create-room', room => {
@@ -31,24 +39,33 @@ ws.of('/group').on('connection', socket => {
         
         socket.join(room);
 
-        console.log(`${socket.id} has joined ${room} room`);
+        console.log(`${socket.handshake.auth.name} has joined ${room} room`);
         
         ws.emit('created-room', room);
     })
 
     socket.on('join-room', room => {
-        socket.leave(socket.id);
-    
-        socket.join(room);
-    
-        console.log(`${socket.id} has joined ${room} room`);
+        if(!checkRoom(room)) {
+            socket.emit('room-error', "room not available");
+        }
+        else {
+            socket.leave(socket.id);
+        
+            socket.join(room);
+        
+            console.log(`${socket.handshake.auth.name} has joined ${room} room`);
+        }
     })
 
     socket.on('send-message', message => {
         Array.from(socket.rooms)
         .filter(id => id != socket.id)
         .forEach(room => {
-            ws.in(room).emit('send-message', message);
+            ws.of('/group').in(room).emit('send-message', message);
+            // socket.emit('send-message', message)
+            // socket.broadcast.emit('send-message', message)
+            // ws.in(room).emit('send-message', message);
+            // ws.emit('send-message', message)
         })
     })
 })

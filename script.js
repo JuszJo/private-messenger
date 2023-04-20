@@ -6,7 +6,7 @@ const main = document.querySelector('main');
 // io(PATH: url | namespace, OPTIONS: object)
 
 const socket = io('/', {auth: {name: user}});
-const group = io('/group');
+const group = io('/group', {auth: {name: user}});
 
 function createRoom() {
     const input = document.querySelector('input');
@@ -35,7 +35,16 @@ socket.on('created-room', room => {
     div.append(h3)
 })
 
-socket.on('send-message', message => {
+group.on('room-error', message => {
+    const error = document.createElement('p');
+    error.innerHTML = message;
+
+    document.querySelector('footer').append(error);
+})
+
+
+group.on('send-message', message => {
+    console.log('working');
     const msg = document.createElement('p');
     msg.innerHTML = message;
 
