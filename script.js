@@ -1,6 +1,7 @@
 const user = prompt("What is your name");
 
-const div = document.querySelector('div');
+const onlineList = document.querySelector('#aside-div');
+const roomName = document.querySelector('#room h3');
 const main = document.querySelector('main');
 
 // io(PATH: url | namespace, OPTIONS: object)
@@ -30,9 +31,11 @@ function sendMessage() {
 
 socket.on('created-room', room => {
     const h3 = document.createElement('h3');
-    h3.innerHTML = `"${room}" room has been created`;
+    h3.innerHTML = `${room}`
+    // h3.innerHTML = `"${room}" room has been created`;
 
-    div.append(h3)
+    onlineList.append(h3)
+    // roomName.append(h3)
 })
 
 group.on('room-error', message => {
@@ -45,7 +48,7 @@ group.on('room-error', message => {
 
 group.on('send-message', message => {
     console.log('working');
-    const msg = document.createElement('p');
+    const msg = document.createElement('h3');
     msg.innerHTML = message;
 
     main.append(msg);

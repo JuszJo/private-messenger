@@ -7,25 +7,119 @@
     <title>Document</title>
     <style>
 
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: rgb(235, 235, 235);
+        }
+
+        #container-div {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+        
+        #aside-div {
+            background-color: rgb(8, 32, 52);
+            height: 100%;
+            padding: 0 5rem 0 1rem;
+        }
+
+        #aside-div h3 {
+            color: rgb(235, 235, 235);
+            font-weight: normal;
+            padding-top: 1rem;
+        }
+
+        #main-container {
+            flex-grow: 1;
+            /* padding: 0 1rem; */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: rgb(13, 47, 74);
+        }
+
+        #room {
+            color: rgb(205, 205, 205);
+            background-color: rgb(8, 32, 52);
+            padding: 0.75rem 0;
+        }
+
+        main {
+            flex-grow: 1;
+            padding-top: 1rem;
+            color: rgb(205, 205, 205);
+        }
+
+        footer {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #button-div {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        button {
+            background-color: rgb(13, 79, 133);
+            border: none;
+            color: rgb(235, 235, 235);
+            padding: 0.5rem 4rem;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
         input {
-            width: 15rem;
+            /* width: 100%; */
+            width: 100%;
+            background-color: rgb(8, 32, 52);
+            height: 3rem;
+            border: none;
+            color: rgb(235, 235, 235);
+            font-size: 1.25rem;
+            padding: 0 1rem;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            outline-style: solid;
+            outline-color: black;
         }
 
     </style>
 </head>
 <body>
-    <div>
-        
+    <div id="container-div">
+        <aside>
+            <div id="aside-div">
+                <h3>Person1</h3> 
+                <h3>Person2</h3>
+            </div>
+        </aside>
+        <div id="main-container">
+            <div id="room">
+                <h3>Room 1</h3>
+            </div>
+            <main>
+                <h3>Hi</h3>
+                <h3>Hello</h3>
+            </main>
+            <footer>
+                <input type="text" placeholder="Create, Join or Send Message" >
+                <div id="button-div">
+                    <button onclick="createRoom()">Create</button>
+                    <button onclick="joinRoom()">Join</button>
+                    <button onclick="sendMessage()">Send Message</button>
+                </div>
+            </footer>
+        </div>
     </div>
-    <main>
-
-    </main>
-    <footer>
-        <input type="text">
-    </footer>
-    <button onclick="createRoom()">Create</button>
-    <button onclick="joinRoom()">Join</button>
-    <button onclick="sendMessage()">Send Message</button>
     <script src="/socket.io/socket.io.js"></script>
     <script src="script.js"></script>
 </body>
