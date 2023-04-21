@@ -46,7 +46,7 @@ function sendMessage() {
     input.value = '';
 }
 
-function getName() {
+function changeView() {
     if(this.innerHTML != user) {
         roomName.innerHTML = this.innerHTML;
         roomName.classList.add(this.classList.value)
@@ -63,7 +63,7 @@ socket.on('on-connection', users => {
         const h3 = document.createElement('h3');
         h3.innerHTML = `${users[i]}`;
         h3.classList.add('private');
-        h3.addEventListener('click', getName);
+        h3.addEventListener('click', changeView);
 
         onlineList.append(h3);
     }
@@ -73,6 +73,7 @@ socket.on('created-room', room => {
     const h3 = document.createElement('h3');
     h3.innerHTML = `${room}`;
     h3.classList.add('room');
+    h3.addEventListener('click', changeView);
 
     onlineList.append(h3);
 })
