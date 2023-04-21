@@ -23,12 +23,13 @@ const ws = new io.Server(server);
 
 // socket.nsp shows all namespaces, then .name is to show current socket namespace
 
+// HELPER FUNCTIONS
+
 function checkRoom(room) {
     const rooms = ws.of('/group').adapter.rooms;
     let exist = false;
 
     rooms.forEach((value, key, map) => {
-        // console.log(key, room);
         if(key == room) exist = true;
     })
 
@@ -51,6 +52,8 @@ async function getAllSockets() {
         throw new Error("Something went wrong in getting all sockets");
     }
 }
+
+// GROUP
 
 ws.of('/group').adapter.on('create-room', room => {
     console.log(room, "Was created");
@@ -81,6 +84,7 @@ ws.of('/group').on('connection', socket => {
     })
 
     socket.on('send-message', ({user, message}) => {
+        console.log("from-group");
         // create an array from the rooms set and filter it for the recently created room
         // then emit the message to the particular room
         // NOTE in the scope of rooms the broadcast property is undefined so the io will be used to send to all sockets
@@ -93,6 +97,16 @@ ws.of('/group').on('connection', socket => {
         })
     })
 })
+
+// PRIVATE
+
+ws.of('/private', socket => {
+    socket.on('send-message', ({user, message}) => {
+        console.log("from-private");;
+    })
+})
+
+// MAIN
 
 ws.on('connection', socket => {
     console.log(`${socket.handshake.auth.name} has connected to the server`);
