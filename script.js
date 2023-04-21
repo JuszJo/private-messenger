@@ -29,11 +29,15 @@ function sendMessage() {
     input.value = '';
 }
 
-socket.on('on-connection', user => {
-    const h3 = document.createElement('h3');
-    h3.innerHTML = `${user}`;
+socket.on('on-connection', users => {
+    while(onlineList.hasChildNodes()) onlineList.removeChild(onlineList.firstChild);
 
-    onlineList.append(h3)
+    for(let i = 0; i < users.length; ++i) {
+        const h3 = document.createElement('h3');
+        h3.innerHTML = `${users[i]}`;
+
+        onlineList.append(h3);
+    }
 })
 
 socket.on('created-room', room => {
@@ -42,7 +46,6 @@ socket.on('created-room', room => {
     // h3.innerHTML = `"${room}" room has been created`;
 
     onlineList.append(h3);
-    // roomName.append(h3)
 })
 
 group.on('room-error', message => {

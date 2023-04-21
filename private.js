@@ -36,9 +36,16 @@ function checkRoom(room) {
 }
 
 async function getAllSockets() {
+    const onlineUsers = new Set();
+
     try {
         const sockets = await ws.fetchSockets();
-        console.log(sockets);
+
+        for(const socket of sockets) {
+            onlineUsers.add(socket.handshake.auth.name)
+        }
+
+        return onlineUsers;
     }
     catch(err) {
         throw new Error("Something went wrong in getting all sockets");
@@ -90,7 +97,14 @@ ws.of('/group').on('connection', socket => {
 ws.on('connection', socket => {
     console.log(`${socket.handshake.auth.name} has connected to the server`);
 
-    ws.emit('on-connection', socket.handshake.auth.name);
+    getAllSockets()
+    .then(value => {
+        ws.emit('on-connection', [...value])
+    })
+
+    // ws.emit('on-connection', sockets);
+
+    // ws.emit('on-connection', socket.handshake.auth.name);
 
     socket.on('disconnect', reason => {
         console.log(`${reason}: user disconnected`);
