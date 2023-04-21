@@ -29,12 +29,19 @@ function sendMessage() {
     input.value = '';
 }
 
-socket.on('created-room', room => {
+socket.on('on-connection', user => {
     const h3 = document.createElement('h3');
-    h3.innerHTML = `${room}`
-    // h3.innerHTML = `"${room}" room has been created`;
+    h3.innerHTML = `${user}`;
 
     onlineList.append(h3)
+})
+
+socket.on('created-room', room => {
+    const h3 = document.createElement('h3');
+    h3.innerHTML = `${room}`;
+    // h3.innerHTML = `"${room}" room has been created`;
+
+    onlineList.append(h3);
     // roomName.append(h3)
 })
 

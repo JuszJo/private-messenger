@@ -8,6 +8,12 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html')
 });
 
+app.use((err, req, res, next) => {
+    console.log(err.stack);
+
+    res.status(500).send('Internal Server Error')
+})
+
 const server = app.listen(3000, () => console.log(`Listening on http://localhost:${3000}`));
 const ws = new io.Server(server);
 
@@ -22,11 +28,21 @@ function checkRoom(room) {
     let exist = false;
 
     rooms.forEach((value, key, map) => {
-        console.log(key, room);
+        // console.log(key, room);
         if(key == room) exist = true;
     })
 
     return exist;
+}
+
+async function getAllSockets() {
+    try {
+        const sockets = await ws.fetchSockets();
+        console.log(sockets);
+    }
+    catch(err) {
+        throw new Error("Something went wrong in getting all sockets");
+    }
 }
 
 ws.of('/group').adapter.on('create-room', room => {
@@ -58,22 +74,6 @@ ws.of('/group').on('connection', socket => {
     })
 
     socket.on('send-message', ({user, message}) => {
-        Array.from(socket.rooms)
-        .filter(id => id != socket.id)
-        .forEach(room => {
-            ws.of('/group').in(room).emit('send-message', {user: user, message: message});
-            // socket.emit('send-message', message)
-            // socket.broadcast.emit('send-message', message)
-            // ws.in(room).emit('send-message', message);
-            // ws.emit('send-message', message)
-        })
-    })
-})
-
-ws.on('connection', socket => {
-    console.log(`${socket.handshake.auth.name} has connected to the server`);
-
-    /* socket.on('send-message', message => {
         // create an array from the rooms set and filter it for the recently created room
         // then emit the message to the particular room
         // NOTE in the scope of rooms the broadcast property is undefined so the io will be used to send to all sockets
@@ -82,8 +82,17 @@ ws.on('connection', socket => {
         Array.from(socket.rooms)
         .filter(id => id != socket.id)
         .forEach(room => {
-            // console.log(socket.id, room);
-            ws.in(room).emit('send-message', message)
+            ws.of('/group').in(room).emit('send-message', {user: user, message: message});
         })
-    }) */
+    })
+})
+
+ws.on('connection', socket => {
+    console.log(`${socket.handshake.auth.name} has connected to the server`);
+
+    ws.emit('on-connection', socket.handshake.auth.name);
+
+    socket.on('disconnect', reason => {
+        console.log(`${reason}: user disconnected`);
+    })
 });
