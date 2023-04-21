@@ -34,7 +34,7 @@ function sendMessage() {
         for(let i = 0; i < onlineArray.length; ++i) {
             if(roomName.classList.value == "private") {
                 privateMessage = true;
-                private.emit('send-message', {user: user, message: input.value});
+                private.emit('send-message', {user: user, message: input.value, to: roomName.innerHTML});
 
                 break;
             }

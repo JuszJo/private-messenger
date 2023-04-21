@@ -101,8 +101,8 @@ ws.of('/group').on('connection', socket => {
 // PRIVATE
 
 ws.of('/private', socket => {
-    socket.on('send-message', ({user, message}) => {
-        console.log("from-private");;
+    socket.on('send-message', ({user, message, to}) => {
+        console.log("from-private");
     })
 })
 
