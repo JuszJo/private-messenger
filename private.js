@@ -44,7 +44,6 @@ async function getIds() {
 
         
         for(const socket of sockets) {
-            console.log(socket.id);
             onlineUsersID.add([{id: socket.id, name: socket.handshake.auth.name}]);
         }
 
