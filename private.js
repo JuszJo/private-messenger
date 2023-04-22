@@ -133,9 +133,10 @@ ws.of('/private').on('connection', socket => {
             set.forEach(value => {
                 // console.log(user, to, value[0]);
                 if(to == value[0].name) {
-                    console.log(user, to, value[0].id);
+                    // console.log(user, socket.id, to, value[0].id);
                     ws.to(value[0].id).emit('send-message', {user: user, message: message});
                 }
+                if(user == value[0].name) ws.to(value[0].id).emit('send-message', {user: user, message: message});
             })
         })
     })

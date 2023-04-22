@@ -30,7 +30,7 @@ function sendMessage() {
     const input = document.querySelector('input');
     let privateMessage = false;
 
-    if(input.value) {
+    if(input.value && roomName.innerHTML) {
         for(let i = 0; i < onlineArray.length; ++i) {
             if(roomName.classList.value == "private") {
                 privateMessage = true;
@@ -101,7 +101,8 @@ socket.on('on-connection', users => {
 }) */
 
 socket.on('send-message', ({user, message}) => {
-    console.log("sthis-worked");
+    if(!roomName.innerHTML) return;
+    
     const msg = document.createElement('h3');
     msg.innerHTML = `${user}: ${message}`;
 
