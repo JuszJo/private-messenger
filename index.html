@@ -64,7 +64,7 @@
 
         #button-div {
             display: flex;
-            justify-content: space-between;
+            /* justify-content: space-between; */
         }
 
         button {
@@ -74,6 +74,7 @@
             padding: 0.5rem 4rem;
             font-size: 1rem;
             cursor: pointer;
+            flex-grow: 1;
         }
 
         input {
@@ -118,8 +119,8 @@
             <footer>
                 <input type="text" placeholder="Create, Join or Send Message">
                 <div id="button-div">
-                    <button onclick="createRoom()">Create</button>
-                    <button onclick="joinRoom()">Join</button>
+                    <!-- <button onclick="createRoom()">Create</button>
+                    <button onclick="joinRoom()">Join</button> -->
                     <button onclick="sendMessage()">Send Message</button>
                 </div>
             </footer>

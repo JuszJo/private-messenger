@@ -12,7 +12,7 @@ const socket = io('/', {auth: {name: user}});
 const group = io('/group', {auth: {name: user}});
 const private = io('/private', {auth: {name: user}});
 
-function createRoom() {
+/* function createRoom() {
     const input = document.querySelector('input');
     if(input.value) group.emit('create-room', input.value);
     // if(input.value) socket.emit('create-room', input.value);
@@ -24,7 +24,7 @@ function joinRoom() {
     if(input.value) group.emit('join-room', input.value);
     // if(input.value) socket.emit('join-room', input.value);
     input.value = '';
-}
+} */
 
 function sendMessage() {
     const input = document.querySelector('input');
@@ -69,23 +69,39 @@ socket.on('on-connection', users => {
     }
 })
 
-socket.on('created-room', room => {
+/* socket.on('created-room', room => {
     const h3 = document.createElement('h3');
     h3.innerHTML = `${room}`;
     h3.classList.add('room');
     h3.addEventListener('click', changeView);
 
     onlineList.append(h3);
-})
+}) */
 
-group.on('room-error', message => {
+/* group.on('room-error', message => {
     const error = document.createElement('p');
     error.innerHTML = message;
 
     document.querySelector('footer').append(error);
-})
+}) */
 
-group.on('send-message', ({user, message}) => {
+/* group.on('send-message', ({user, message}) => {
+    const msg = document.createElement('h3');
+    msg.innerHTML = `${user}: ${message}`;
+
+    main.append(msg);
+}) */
+
+/* private.on('send-message', ({user, message}) => {
+    console.log("pthis-worked");
+    const msg = document.createElement('h3');
+    msg.innerHTML = `${user}: ${message}`;
+
+    main.append(msg);
+}) */
+
+socket.on('send-message', ({user, message}) => {
+    console.log("sthis-worked");
     const msg = document.createElement('h3');
     msg.innerHTML = `${user}: ${message}`;
 

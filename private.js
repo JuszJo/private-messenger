@@ -25,7 +25,7 @@ const ws = new io.Server(server);
 
 // HELPER FUNCTIONS
 
-function checkRoom(room) {
+/* function checkRoom(room) {
     const rooms = ws.of('/group').adapter.rooms;
     let exist = false;
 
@@ -34,6 +34,30 @@ function checkRoom(room) {
     })
 
     return exist;
+} */
+
+async function getIds() {
+    const onlineUsersID = new Set();
+
+    try {
+        const sockets = await ws.fetchSockets();
+
+        
+        for(const socket of sockets) {
+            console.log(socket.id);
+            onlineUsersID.add([{id: socket.id, name: socket.handshake.auth.name}]);
+        }
+
+        return onlineUsersID;
+    }
+    catch(err) {
+        throw new Error("Something went wrong in getting all sockets");
+    }
+    /* const onlineUsersId = new Set();
+    
+    onlineUsersId.add([{id: socket.id, name: socket.handshake.auth.name}]);
+
+    return onlineUsersId; */
 }
 
 async function getAllSockets() {
@@ -43,7 +67,7 @@ async function getAllSockets() {
         const sockets = await ws.fetchSockets();
 
         for(const socket of sockets) {
-            onlineUsers.add(socket.handshake.auth.name)
+            onlineUsers.add(socket.handshake.auth.name);
         }
 
         return onlineUsers;
@@ -55,11 +79,11 @@ async function getAllSockets() {
 
 // GROUP
 
-ws.of('/group').adapter.on('create-room', room => {
+/* ws.of('/group').adapter.on('create-room', room => {
     console.log(room, "Was created");
-})
+}) */
 
-ws.of('/group').on('connection', socket => {
+/* ws.of('/group').on('connection', socket => {
     socket.on('create-room', room => {
         socket.leave(socket.id);
         
@@ -96,14 +120,45 @@ ws.of('/group').on('connection', socket => {
             ws.of('/group').in(room).emit('send-message', {user: user, message: message});
         })
     })
-})
+}) */
 
 // PRIVATE
 
-ws.of('/private', socket => {
+ws.of('/private').on('connection', socket => {
+    console.log("from-private");
+
     socket.on('send-message', ({user, message, to}) => {
-        console.log("from-private");
+        getIds()
+        .then(set => {
+            set.forEach(value => {
+                // console.log(user, to, value[0]);
+                if(to == value[0].name) {
+                    console.log(user, to, value[0].id);
+                    ws.to(value[0].id).emit('send-message', {user: user, message: message});
+                }
+            })
+        })
     })
+    /* getIds()
+    .then(set => {
+        socket.on('send-message', ({user, message, to}) => {
+            set.forEach(value => {
+                console.log(user, to, value[0]);
+                if(to == value[0].name) {
+                    console.log(to, value[0].name);
+                    ws.to(value[0].id).emit({user: user, message: message});
+                }
+            })
+        })
+    }) */
+    
+    /* socket.on('send-message', ({user, message, to}) => {
+        onlineUsersId.forEach(value => {
+            console.log(value.id, value.name);
+            if(to == value.name) ws.to(value.id).emit({user: user, message: message});
+        })
+        // console.log("from-private");
+    }) */
 })
 
 // MAIN
