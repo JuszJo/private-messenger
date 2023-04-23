@@ -1,16 +1,17 @@
-const user = prompt("What is your name");
+const currentUser = prompt("What is your name");
 
 const onlineList = document.querySelector('#aside-div');
 const main = document.querySelector('main');
 let roomName = document.querySelector('#room h3');
 
 let onlineArray = [];
+let messages = [];
 
 // io(PATH: url | namespace, OPTIONS: object)
 
-const socket = io('/', {auth: {name: user}});
-const group = io('/group', {auth: {name: user}});
-const private = io('/private', {auth: {name: user}});
+const socket = io('/', {auth: {name: currentUser}});
+const group = io('/group', {auth: {name: currentUser}});
+const private = io('/private', {auth: {name: currentUser}});
 
 /* function createRoom() {
     const input = document.querySelector('input');
@@ -34,20 +35,33 @@ function sendMessage() {
         for(let i = 0; i < onlineArray.length; ++i) {
             if(roomName.classList.value == "private") {
                 privateMessage = true;
-                private.emit('send-message', {user: user, message: input.value, to: roomName.innerHTML});
+                private.emit('send-message', {user: currentUser, message: input.value, to: roomName.innerHTML});
 
                 break;
             }
         }
         
-        if(!privateMessage) group.emit('send-message', {user: user, message: input.value});
+        if(!privateMessage) group.emit('send-message', {user: currentUser, message: input.value});
+
+        displayMessage(currentUser, input.value);
     };
 
     input.value = '';
+
+}
+
+function displayMessage(currentUser, message) {
+    const msg = document.createElement('h3');
+    msg.innerHTML = `${currentUser}: ${message}`;
+
+    main.append(msg);
+
+    main.scrollTo(0, main.clientHeight)
+    // window.scrollTo(0, document.body.scrollHeight)
 }
 
 function changeView() {
-    if(this.innerHTML != user) {
+    if(this.innerHTML != currentUser) {
         roomName.innerHTML = this.innerHTML;
         roomName.classList.add(this.classList.value)
     }
@@ -102,9 +116,17 @@ socket.on('on-connection', users => {
 
 socket.on('send-message', ({user, message}) => {
     if(!roomName.innerHTML) return;
+
+    if(roomName.innerHTML != user && user != currentUser) return;
+
+    // messages.push({sender: user, message: message});
     
     const msg = document.createElement('h3');
     msg.innerHTML = `${user}: ${message}`;
 
     main.append(msg);
+
+    main.scrollTo(0, main.clientHeight)
+
+    // window.scrollTo(0, document.body.scrollHeight)
 })
