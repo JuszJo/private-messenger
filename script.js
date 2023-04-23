@@ -59,7 +59,6 @@ function displayMessage(currentUser, message) {
     main.append(msg);
 
     main.scrollTo(0, main.clientHeight)
-    // window.scrollTo(0, document.body.scrollHeight)
 }
 
 function saveState(main) {
@@ -220,6 +219,4 @@ socket.on('send-message', ({user, message}) => {
     main.append(msg);
 
     main.scrollTo(0, main.clientHeight)
-
-    // window.scrollTo(0, document.body.scrollHeight)
 })
