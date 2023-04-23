@@ -1,11 +1,13 @@
 const currentUser = prompt("What is your name");
 
+let mainContainer = document.getElementById('main-container');
 const onlineList = document.querySelector('#aside-div');
 const main = document.querySelector('main');
 let roomName = document.querySelector('#room h3');
 
 let onlineArray = [];
 let messages = [];
+let state = [];
 
 // io(PATH: url | namespace, OPTIONS: object)
 
@@ -60,11 +62,102 @@ function displayMessage(currentUser, message) {
     // window.scrollTo(0, document.body.scrollHeight)
 }
 
-function changeView() {
-    if(this.innerHTML != currentUser) {
-        roomName.innerHTML = this.innerHTML;
-        roomName.classList.add(this.classList.value)
+function saveState(main) {
+    let exist = false;
+
+    // search in state if user has recieved message before from said user
+
+    state.forEach(value => {
+        Object.keys(value).forEach(key => {
+            if(key == roomName.innerHTML) {
+                // console.log(key, roomName.innerHTML);
+                exist = true;
+                // console.log("exist", roomName.innerHTML);
+
+                // console.log(main.children);
+                const arr = [];
+    
+                for(let i = 0; i < main.children.length; ++i) {
+                    arr.push(main.children[i].innerHTML);
+                }
+
+                value[key] = arr;
+            }
+        })
+    })
+
+    // if user hasn't recieved a message before, create the said user and add to state
+
+    if(!exist) {
+        const arr = [];
+        // console.log("does not exist", roomName.innerHTML);
+
+        for(let i = 0; i < main.children.length; ++i) {
+            arr.push(main.children[i].innerHTML);
+        }
+
+        const obj = {
+            [roomName.innerHTML]: arr
+        };
+
+        state.push(obj);
     }
+
+    // console.log(state);
+}
+
+function getState(stateToGet) {
+    let exist = false;
+
+    // console.log(state, stateToGet);
+
+    // check if messages exist between users before and display;
+
+    state.forEach(value => {
+        Object.keys(value).forEach(key => {
+            if(key == stateToGet) {
+                while(main.hasChildNodes()) main.removeChild(main.firstChild);
+                // console.log(`${stateToGet} exist`);
+                exist = true;
+
+                value[key].forEach(message => {
+                    const h3 = document.createElement('h3');
+                    h3.innerHTML = message;
+
+                    main.append(h3);
+                    // console.log(message);
+                })
+                // mainContainer = value[key];
+            }
+        })
+    })
+
+    // if messages doesn't exist, clear the previous messages from the screen
+
+    if(!exist) {
+        /* console.log(state[0][""]);
+        console.log(state); */
+        // console.log(`${stateToGet} does not exist`);
+        while(main.hasChildNodes()) main.removeChild(main.firstChild);
+
+        // console.log(state);
+        // mainContainer = state[0][""];
+    }
+}
+
+function changeView() {
+    // this changes the view from user to user;
+
+    if(this.innerHTML != currentUser) {
+        saveState(main);
+
+        roomName.innerHTML = this.innerHTML;
+        roomName.classList.add(this.classList.value);
+
+        getState(roomName.innerHTML);
+    }
+
+    // console.log(state);
 }
 
 socket.on('on-connection', users => {
