@@ -25,17 +25,6 @@ const ws = new io.Server(server);
 
 // HELPER FUNCTIONS
 
-/* function checkRoom(room) {
-    const rooms = ws.of('/group').adapter.rooms;
-    let exist = false;
-
-    rooms.forEach((value, key, map) => {
-        if(key == room) exist = true;
-    })
-
-    return exist;
-} */
-
 async function getIds() {
     const onlineUsersID = new Set();
 
@@ -52,11 +41,6 @@ async function getIds() {
     catch(err) {
         throw new Error("Something went wrong in getting all sockets");
     }
-    /* const onlineUsersId = new Set();
-    
-    onlineUsersId.add([{id: socket.id, name: socket.handshake.auth.name}]);
-
-    return onlineUsersId; */
 }
 
 async function getAllSockets() {
@@ -76,51 +60,6 @@ async function getAllSockets() {
     }
 }
 
-// GROUP
-
-/* ws.of('/group').adapter.on('create-room', room => {
-    console.log(room, "Was created");
-}) */
-
-/* ws.of('/group').on('connection', socket => {
-    socket.on('create-room', room => {
-        socket.leave(socket.id);
-        
-        socket.join(room);
-
-        console.log(`${socket.handshake.auth.name} has joined ${room} room`);
-        
-        ws.emit('created-room', room);
-    })
-
-    socket.on('join-room', room => {
-        if(!checkRoom(room)) {
-            socket.emit('room-error', "room not available");
-        }
-        else {
-            socket.leave(socket.id);
-        
-            socket.join(room);
-        
-            console.log(`${socket.handshake.auth.name} has joined ${room} room`);
-        }
-    })
-
-    socket.on('send-message', ({user, message}) => {
-        console.log("from-group");
-        // create an array from the rooms set and filter it for the recently created room
-        // then emit the message to the particular room
-        // NOTE in the scope of rooms the broadcast property is undefined so the io will be used to send to all sockets
-        // while the socket will emit to all sockets excluding itself
-
-        Array.from(socket.rooms)
-        .filter(id => id != socket.id)
-        .forEach(room => {
-            ws.of('/group').in(room).emit('send-message', {user: user, message: message});
-        })
-    })
-}) */
-
 // PRIVATE
 
 ws.of('/private').on('connection', socket => {
@@ -130,35 +69,12 @@ ws.of('/private').on('connection', socket => {
         getIds()
         .then(set => {
             set.forEach(value => {
-                // console.log(user, to, value[0]);
                 if(to == value[0].name) {
-                    // console.log(user, socket.id, to, value[0].id);
                     ws.to(value[0].id).emit('send-message', {user: user, message: message});
                 }
-                // if(user == value[0].name) ws.to(value[0].id).emit('send-message', {user: user, message: message});
             })
         })
     })
-    /* getIds()
-    .then(set => {
-        socket.on('send-message', ({user, message, to}) => {
-            set.forEach(value => {
-                console.log(user, to, value[0]);
-                if(to == value[0].name) {
-                    console.log(to, value[0].name);
-                    ws.to(value[0].id).emit({user: user, message: message});
-                }
-            })
-        })
-    }) */
-    
-    /* socket.on('send-message', ({user, message, to}) => {
-        onlineUsersId.forEach(value => {
-            console.log(value.id, value.name);
-            if(to == value.name) ws.to(value.id).emit({user: user, message: message});
-        })
-        // console.log("from-private");
-    }) */
 })
 
 // MAIN
@@ -170,10 +86,6 @@ ws.on('connection', socket => {
     .then(value => {
         ws.emit('on-connection', [...value])
     })
-
-    // ws.emit('on-connection', sockets);
-
-    // ws.emit('on-connection', socket.handshake.auth.name);
 
     socket.on('disconnect', reason => {
         console.log(`${reason}: user disconnected`);
