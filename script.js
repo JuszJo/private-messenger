@@ -5,7 +5,7 @@ const main = document.querySelector('main');
 let roomName = document.querySelector('#room h3');
 
 let onlineArray = [];
-let messages = [];
+let notViewedMessages = [];
 let state = [];
 
 // io(PATH: url | namespace, OPTIONS: object)
@@ -43,7 +43,6 @@ function displayMessage(currentUser, message) {
     msg.innerHTML = `${currentUser}: ${message}`;
 
     main.append(msg);
-
     main.scrollTo(0, main.clientHeight);
 }
 
@@ -88,6 +87,8 @@ function saveState(main) {
 function getState(stateToGet) {
     let exist = false;
 
+    while(main.hasChildNodes()) main.removeChild(main.firstChild);
+
     // check if messages exist between users before and display;
 
     state.forEach(value => {
@@ -95,7 +96,7 @@ function getState(stateToGet) {
             if(key == stateToGet) {
                 exist = true;
 
-                while(main.hasChildNodes()) main.removeChild(main.firstChild);
+                // while(main.hasChildNodes()) main.removeChild(main.firstChild);
 
                 value[key].forEach(message => {
                     const h3 = document.createElement('h3');
@@ -103,6 +104,26 @@ function getState(stateToGet) {
 
                     main.append(h3);
                 })
+            }
+        })
+    })
+
+    notViewedMessages.forEach((value, index) => {
+        Object.keys(value).forEach(key => {
+            if(key == stateToGet) {
+                exist = true;
+                
+                value[key].forEach(message => {
+                    const h3 = document.createElement('h3');
+                    h3.innerHTML = message;
+
+                    main.append(h3);
+                })
+
+                // remove viewed messages
+
+                notViewedMessages.splice(index, 1);
+
             }
         })
     })
@@ -141,15 +162,43 @@ socket.on('on-connection', users => {
     }
 })
 
-socket.on('send-message', ({user, message}) => {
-    if(!roomName.innerHTML) return;
+function saveNotViewed(user, message) {
+    let exist = false;
 
-    if(roomName.innerHTML != user && user != currentUser) return;
+    notViewedMessages.forEach(value => {
+        Object.keys(value).forEach(key => {
+            if(key == user) {
+                exist = true;
+
+                value[key].push(`${user}: ${message}`);
+            }
+        })
+    })
+
+    if(!exist) {
+        const arr = [];
+
+        arr.push(`${user}: ${message}`);
+
+        const obj = {
+            [user]: arr
+        }
+
+        notViewedMessages.push(obj)
+    }
+    // console.log(notViewedMessages);
+}
+
+socket.on('send-message', ({user, message}) => {
+    if(roomName.innerHTML != user && user != currentUser) {
+        saveNotViewed(user, message)
+
+        return;
+    }
     
     const msg = document.createElement('h3');
     msg.innerHTML = `${user}: ${message}`;
 
     main.append(msg);
-
     main.scrollTo(0, main.clientHeight);
 })
