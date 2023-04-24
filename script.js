@@ -4,6 +4,10 @@ const onlineList = document.querySelector('#aside-div');
 const main = document.querySelector('main');
 let roomName = document.querySelector('#room h3');
 
+window.addEventListener('keydown', e => {
+    if(e.key == "Enter") sendMessage();
+})
+
 let onlineArray = [];
 let notViewedMessages = [];
 let state = [];
