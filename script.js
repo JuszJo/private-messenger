@@ -100,8 +100,6 @@ function getState(stateToGet) {
             if(key == stateToGet) {
                 exist = true;
 
-                // while(main.hasChildNodes()) main.removeChild(main.firstChild);
-
                 value[key].forEach(message => {
                     const h3 = document.createElement('h3');
                     h3.innerHTML = message;
@@ -124,10 +122,7 @@ function getState(stateToGet) {
                     main.append(h3);
                 })
 
-                // remove viewed messages
-
                 notViewedMessages.splice(index, 1);
-
             }
         })
     })
@@ -152,6 +147,7 @@ function changeView() {
 
 socket.on('on-connection', users => {
     while(onlineList.hasChildNodes()) onlineList.removeChild(onlineList.firstChild);
+    
     onlineArray = [];
 
     for(let i = 0; i < users.length; ++i) {

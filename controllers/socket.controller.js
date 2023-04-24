@@ -6,7 +6,7 @@ class Socket {
     
         getAllSockets(ws)
         .then(value => {
-            ws.emit('on-connection', [...value])
+            ws.emit('on-connection', value)
         })
     
         socket.on('disconnect', reason => {
@@ -19,10 +19,10 @@ class Socket {
     
         socket.on('send-message', ({user, message, to}) => {
             getIds(ws)
-            .then(set => {
-                set.forEach(value => {
-                    if(to == value[0].name) {
-                        ws.to(value[0].id).emit('send-message', {user: user, message: message});
+            .then(arr => {
+                arr.forEach(value => {
+                    if(to == value.name) {
+                        ws.to(value.id).emit('send-message', {user: user, message: message});
                     }
                 })
             })

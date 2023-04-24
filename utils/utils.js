@@ -1,11 +1,11 @@
 exports.getAllSockets = async ws => {
-    const onlineUsers = new Set();
+    const onlineUsers = [];
 
     try {
         const sockets = await ws.fetchSockets();
 
         for(const socket of sockets) {
-            onlineUsers.add(socket.handshake.auth.name);
+            onlineUsers.push(socket.handshake.auth.name)
         }
 
         return onlineUsers;
@@ -16,13 +16,13 @@ exports.getAllSockets = async ws => {
 }
 
 exports.getIds = async ws => {
-    const onlineUsersID = new Set();
+    const onlineUsersID = [];
 
     try {
         const sockets = await ws.fetchSockets();
 
         for(const socket of sockets) {
-            onlineUsersID.add([{id: socket.id, name: socket.handshake.auth.name}]);
+            onlineUsersID.push({id: socket.id, name: socket.handshake.auth.name})
         }
 
         return onlineUsersID;
