@@ -1,4 +1,6 @@
-const currentUser = prompt("What is your name");
+let currentUser;
+
+while(!currentUser) currentUser = prompt("What is your name");
 
 const onlineList = document.querySelector('#aside-div');
 const main = document.querySelector('main');
