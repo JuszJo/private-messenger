@@ -160,11 +160,29 @@ function saveNotViewed(user, message) {
     }
 }
 
+function alertNewMessage(user) {
+    for(let i = 0; i < onlineArray.length; ++i) {
+        if(user == onlineList.children[i].innerHTML) {
+            onlineList.children[i].classList.add('new-message');
+        }
+    }
+}
+
+function removeAlertNewMessage(user) {
+    for(let i = 0; i < onlineArray.length; ++i) {
+        if(user == onlineList.children[i].innerHTML) {
+            onlineList.children[i].classList.remove('new-message');
+        }
+    }
+}
+
 function changeView() {
     // this changes the view from user to user;
 
     if(this.innerHTML != currentUser) {
         saveState(main);
+
+        removeAlertNewMessage(this.innerHTML);
 
         roomName.innerHTML = this.innerHTML;
         roomName.classList.add(this.classList.value);
@@ -195,6 +213,8 @@ socket.on('on-connection', users => {
 socket.on('send-message', ({user, message}) => {
     if(roomName.innerHTML != user && user != currentUser) {
         saveNotViewed(user, message)
+
+        alertNewMessage(user);
 
         return;
     }
