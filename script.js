@@ -149,6 +149,8 @@ function changeView() {
 
 socket.on('on-connection', users => {
     while(onlineList.hasChildNodes()) onlineList.removeChild(onlineList.firstChild);
+
+    // sessionStorage.setItem("users", )
     
     onlineArray = [];
 
@@ -188,7 +190,6 @@ function saveNotViewed(user, message) {
 
         notViewedMessages.push(obj)
     }
-    // console.log(notViewedMessages);
 }
 
 socket.on('send-message', ({user, message}) => {
@@ -198,9 +199,5 @@ socket.on('send-message', ({user, message}) => {
         return;
     }
     
-    const msg = document.createElement('h3');
-    msg.innerHTML = `${user}: ${message}`;
-
-    main.append(msg);
-    main.scrollTo(0, main.clientHeight);
+    displayMessage(user, message);
 })
