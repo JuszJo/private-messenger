@@ -6,7 +6,7 @@ class Socket {
     
         getAllSockets(ws)
         .then(value => {
-            ws.emit('on-connection', value)
+            ws.emit('on-connection', value);
         })
     
         socket.on('disconnect', reason => {

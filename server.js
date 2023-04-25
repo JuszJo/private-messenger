@@ -4,17 +4,11 @@ const Socket = require('./controllers/socket.controller');
 
 const app = express();
 
-app.use(express.static(__dirname))
+app.use(express.static(__dirname));
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html')
 });
-
-app.use((err, req, res, next) => {
-    console.log(err.stack);
-
-    res.status(500).send('Internal Server Error')
-})
 
 const server = app.listen(3000, () => console.log(`Listening on http://localhost:${3000}`));
 const ws = new io.Server(server);
@@ -25,14 +19,12 @@ const ws = new io.Server(server);
 
 // socket.nsp shows all namespaces, then .name is to show current socket namespace
 
-// PRIVATE
+ws.of('/private').on('connection', socket => Socket.handlePrivate(ws, socket))
 
-ws.of('/private').on('connection', socket => {
-    Socket.handlePrivate(ws, socket)
+ws.on('connection', socket => Socket.handleSocket(ws, socket));
+
+app.use((err, req, res, next) => {
+    console.log(err.stack);
+
+    res.status(500).send('Internal Server Error');
 })
-
-// MAIN
-
-ws.on('connection', socket => {
-    Socket.handleSocket(ws, socket)
-});
