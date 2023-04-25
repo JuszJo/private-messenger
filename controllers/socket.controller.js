@@ -1,8 +1,11 @@
+const { createUser, deleteUser } = require('./user.controller');
 const { getAllSockets , getIds } = require('../utils/utils');
 
 class Socket {
     static handleSocket(ws, socket) {
         console.log(`${socket.handshake.auth.name} has connected to the server`);
+
+        createUser(socket.handshake.auth.name, socket.id);
     
         getAllSockets(ws)
         .then(value => {
@@ -11,6 +14,8 @@ class Socket {
     
         socket.on('disconnect', reason => {
             console.log(`${reason}: user disconnected`);
+
+            deleteUser(socket.handshake.auth.name)
         })
     }
     
