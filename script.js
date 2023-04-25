@@ -134,6 +134,32 @@ function getState(stateToGet) {
     if(!exist) while(main.hasChildNodes()) main.removeChild(main.firstChild);
 }
 
+function saveNotViewed(user, message) {
+    let exist = false;
+
+    notViewedMessages.forEach(value => {
+        Object.keys(value).forEach(key => {
+            if(key == user) {
+                exist = true;
+
+                value[key].push(`${user}: ${message}`);
+            }
+        })
+    })
+
+    if(!exist) {
+        const arr = [];
+
+        arr.push(`${user}: ${message}`);
+
+        const obj = {
+            [user]: arr
+        }
+
+        notViewedMessages.push(obj)
+    }
+}
+
 function changeView() {
     // this changes the view from user to user;
 
@@ -165,32 +191,6 @@ socket.on('on-connection', users => {
         onlineList.append(h3);
     }
 })
-
-function saveNotViewed(user, message) {
-    let exist = false;
-
-    notViewedMessages.forEach(value => {
-        Object.keys(value).forEach(key => {
-            if(key == user) {
-                exist = true;
-
-                value[key].push(`${user}: ${message}`);
-            }
-        })
-    })
-
-    if(!exist) {
-        const arr = [];
-
-        arr.push(`${user}: ${message}`);
-
-        const obj = {
-            [user]: arr
-        }
-
-        notViewedMessages.push(obj)
-    }
-}
 
 socket.on('send-message', ({user, message}) => {
     if(roomName.innerHTML != user && user != currentUser) {
