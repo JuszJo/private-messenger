@@ -184,6 +184,8 @@ function changeView() {
 
         removeAlertNewMessage(this.innerHTML);
 
+        document.querySelector('input').focus();
+
         roomName.innerHTML = this.innerHTML;
         roomName.classList.add(this.classList.value);
 
