@@ -9,8 +9,6 @@ exports.createUser = async (username, userID) => {
         const user = new User({ username: username, userID: userID });
     
         user.save();
-
-        console.log(user);
     }
     catch(err) {
         throw err;
@@ -19,5 +17,5 @@ exports.createUser = async (username, userID) => {
 
 exports.deleteUser = async username => {
     User.findOneAndRemove({username: username})
-    .then(() => console.log("Done"))
+    .then(() => console.log("user removed from db"))
 }
