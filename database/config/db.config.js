@@ -6,7 +6,7 @@ let config;
 
 if(prod) {
     config = {
-        url: `mongodb+srv://joshua:${process.env.PASSWD}@cluster0.xjoqb.mongodb.net/messenger?retryWrites=true&w=majority`,
+        url: `mongodb+srv://${process.env.USER}:${process.env.PASSWD}@cluster0.xjoqb.mongodb.net/messenger?retryWrites=true&w=majority`,
         collection: "messages"
     }
 }
