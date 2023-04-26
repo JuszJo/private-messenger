@@ -4,9 +4,7 @@ exports.getAllSockets = async ws => {
     try {
         const sockets = await ws.fetchSockets();
 
-        for(const socket of sockets) {
-            onlineUsers.push(socket.handshake.auth.name)
-        }
+        for(const socket of sockets) onlineUsers.push(socket.handshake.auth.name);
 
         return onlineUsers;
     }
@@ -21,9 +19,7 @@ exports.getIds = async ws => {
     try {
         const sockets = await ws.fetchSockets();
 
-        for(const socket of sockets) {
-            onlineUsersID.push({id: socket.id, name: socket.handshake.auth.name})
-        }
+        for(const socket of sockets) onlineUsersID.push({id: socket.id, name: socket.handshake.auth.name});
 
         return onlineUsersID;
     }
