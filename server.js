@@ -1,4 +1,6 @@
 const express = require('express');
+const db = require('./database/db');
+const config = require('./database/config/db.config');
 const io = require('socket.io');
 const Socket = require('./controllers/socket.controller');
 
@@ -6,9 +8,12 @@ const app = express();
 
 app.use(express.static(__dirname));
 
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html')
-});
+db.connect(config.url)
+.then(() => {
+    app.get('/', (req, res) => {
+        res.sendFile(__dirname + '/index.html')
+    });
+})
 
 const server = app.listen(3000, () => console.log(`Listening on http://localhost:${3000}`));
 const ws = new io.Server(server);

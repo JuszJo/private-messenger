@@ -1,7 +1,7 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
-let prod = false;
+let prod = true;
 let config;
 
 if(prod) {
