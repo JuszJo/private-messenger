@@ -53,11 +53,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding-top: 0.5rem;
+            padding-left: 1rem;
         }
 
         #close-menu-div img {
             display: none;
             vertical-align: middle;
+            padding-right: 0.5rem;
         }
 
         #aside-div h3 {
@@ -85,8 +88,16 @@
             background-color: rgb(13, 47, 74);
         }
 
+        #main-heading-div {
+            display: flex;
+            align-items: center;
+        }
+
         #open-menu {
             display: none;
+            vertical-align: middle;
+            margin-left: 0.5rem;
+            margin-right: 2.5rem;
         }
 
         #room {
@@ -100,7 +111,6 @@
             margin-left: 0.5rem;
         }
 
-        
         main {
             flex-grow: 1;
             padding-top: 1rem;
@@ -139,7 +149,7 @@
             background-color: rgb(13, 79, 133);
             border: none;
             color: rgb(235, 235, 235);
-            padding: 0.5rem 4rem;
+            padding: 0.5rem 0;
             font-size: 1rem;
             cursor: pointer;
             flex-grow: 1;
@@ -168,10 +178,6 @@
                 flex-shrink: 0;
             }
 
-            /* #close-menu {
-
-            } */
-
             #open-menu {
                 display: unset;
             }
@@ -182,6 +188,12 @@
                 display: flex;
                 flex-direction: column;
                 gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            aside {
+                flex-basis: 125px;
             }
         }
     </style>
@@ -196,7 +208,7 @@
                         <h3>Online</h3>
                     </div>
                     <div id="close-menu-div">
-                        <img id="close-menu" width="20" height="20" src="./assets/close-menu.svg" />
+                        <img id="close-menu" width="24" height="24" src="./assets/close-menu.svg" />
                     </div>
                 </div>
             </div>
@@ -206,8 +218,14 @@
         </aside>
         <div id="main-container">
             <div id="room">
-                <span id="open-menu">back</span>
-                <h3></h3>
+                <div id="main-heading-div">
+                    <div>
+                        <img width="24" height="24" src="./assets//open-menu.svg" id="open-menu" />
+                    </div>
+                    <div>
+                        <h3></h3>
+                    </div>
+                </div>
             </div>
             <main>
                 <h1 style="text-align: center; font-size: 6rem; position: relative; top: 50%; translate: 0 -70%;">FEATURES COMING<br>SOON</h1>
