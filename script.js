@@ -3,8 +3,30 @@ let currentUser;
 while(!currentUser) currentUser = prompt("What is your name");
 
 const onlineList = document.querySelector('#aside-div');
+const sideBar = document.querySelector('aside');
 const main = document.querySelector('main');
+const menuOpenButton = document.querySelector('#open-menu');
+const menuCloseButton = document.querySelector('#close-menu');
 let roomName = document.querySelector('#room h3');
+
+function handleMenuOpen() {
+    sideBar.style.display = "flex";
+
+    menuCloseButton.style.display = "unset"
+
+    this.style.display = "none";
+}
+
+function handleMenuClose() {
+    sideBar.style.display = "none";
+
+    menuOpenButton.style.display = "unset"
+
+    this.style.display = "none";
+}
+
+menuOpenButton.addEventListener('click', handleMenuOpen);
+menuCloseButton.addEventListener('click', handleMenuClose);
 
 window.addEventListener('keydown', e => {
     if(e.key == "Enter") sendMessage();

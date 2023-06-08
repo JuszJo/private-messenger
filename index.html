@@ -34,12 +34,12 @@
         }
 
         aside div:nth-child(1) {
-            padding-left: 1rem;
+            /* padding-left: 1rem; */
             background-color: rgb(8, 32, 52);
         }
 
-        aside div:nth-child(1) h3 {
-            padding-top: 0.75rem;
+        #menu-heading-div h3 {
+            /* padding-top: 0.75rem; */
             color: rgb(205, 205, 205);
         }
 
@@ -47,6 +47,17 @@
             background-color: rgb(8, 32, 52);
             height: 100%;
             padding-left: 1rem;
+        }
+
+        #menu-heading-div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #close-menu-div img {
+            display: none;
+            vertical-align: middle;
         }
 
         #aside-div h3 {
@@ -72,6 +83,10 @@
             flex-direction: column;
             justify-content: space-between;
             background-color: rgb(13, 47, 74);
+        }
+
+        #open-menu {
+            display: none;
         }
 
         #room {
@@ -146,6 +161,22 @@
             outline-color: black;
         }
 
+        @media (max-width: 950px) {
+            aside {
+                display: none;
+                flex-basis: 150px;
+                flex-shrink: 0;
+            }
+
+            /* #close-menu {
+
+            } */
+
+            #open-menu {
+                display: unset;
+            }
+        }
+
         @media (max-width: 700px) {
             #button-div {
                 display: flex;
@@ -160,7 +191,14 @@
     <div id="container-div">
         <aside>
             <div>
-                <h3>Online</h3>
+                <div id="menu-heading-div">
+                    <div>
+                        <h3>Online</h3>
+                    </div>
+                    <div id="close-menu-div">
+                        <img id="close-menu" width="20" height="20" src="./assets/close-menu.svg" />
+                    </div>
+                </div>
             </div>
             <div id="aside-div">
                 
@@ -168,6 +206,7 @@
         </aside>
         <div id="main-container">
             <div id="room">
+                <span id="open-menu">back</span>
                 <h3></h3>
             </div>
             <main>
