@@ -39,31 +39,19 @@ let state = [];
 // io(PATH: url | namespace, OPTIONS: object)
 
 const socket = io('/', {auth: {name: currentUser}});
-const group = io('/group', {auth: {name: currentUser}});
 const private = io('/private', {auth: {name: currentUser}});
+// const group = io('/group', {auth: {name: currentUser}});
 
 function sendMessage() {
     const input = document.querySelector('input');
-    let privateMessage = false;
 
     if(input.value && roomName.innerHTML) {
-        for(let i = 0; i < onlineArray.length; ++i) {
-            if(roomName.classList.value == "private") {
-                privateMessage = true;
+        private.emit('send-message', {user: currentUser, message: input.value, to: roomName.innerHTML});
+    }
 
-                private.emit('send-message', {user: currentUser, message: input.value, to: roomName.innerHTML});
-
-                break;
-            }
-        }
-        
-        if(!privateMessage) group.emit('send-message', {user: currentUser, message: input.value});
-
-        displayMessage(currentUser, input.value);
-    };
+    displayMessage(currentUser, input.value);
 
     input.value = '';
-
 }
 
 function displayMessage(currentUser, message) {
