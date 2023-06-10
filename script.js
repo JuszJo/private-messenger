@@ -47,9 +47,9 @@ function sendMessage() {
 
     if(input.value && roomName.innerHTML) {
         private.emit('send-message', {user: currentUser, message: input.value, to: roomName.innerHTML});
-    }
 
-    displayMessage(currentUser, input.value);
+        displayMessage(currentUser, input.value);
+    }
 
     input.value = '';
 }
