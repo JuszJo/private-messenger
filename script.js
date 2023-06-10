@@ -203,6 +203,22 @@ function changeView() {
     }
 }
 
+function removeFromOnlineArray(user) {
+    let userDisconnected = '';
+
+    onlineArray.forEach((onlineUser, index) => {
+        if(onlineUser == user) {
+            userDisconnected = onlineArray.splice(index, 1);
+        }
+    })
+
+    for(let i = 0; i < onlineList.children.length; ++i) {
+        if(userDisconnected == onlineList.children[i].innerText) {
+            onlineList.children[i].remove();
+        }
+    }
+}
+
 socket.on('on-connection', users => {
     while(onlineList.hasChildNodes()) onlineList.removeChild(onlineList.firstChild);
 
@@ -232,4 +248,8 @@ socket.on('send-message', ({user, message}) => {
     }
     
     displayMessage(user, message);
+})
+
+socket.on('user_disconnect', ({user}) => {
+    removeFromOnlineArray(user)
 })

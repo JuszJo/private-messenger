@@ -15,7 +15,9 @@ class Socket {
         socket.on('disconnect', reason => {
             console.log(`${reason}: user disconnected`);
 
-            deleteUser(socket.handshake.auth.name)
+            deleteUser(socket.handshake.auth.name);
+
+            socket.broadcast.emit('user_disconnect', {user: socket.handshake.auth.name});
         })
     }
     
